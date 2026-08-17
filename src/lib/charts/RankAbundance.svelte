@@ -20,12 +20,12 @@
 	let { shops, stage }: Props = $props();
 
 	const WIDTH = 720;
-	const HEIGHT = 470;
+	const HEIGHT = 430;
 	const PANEL_W = 224;
 	const BAR_MAX = 168;
 	const BAR_H = 9;
 	const BAR_GAP = 4;
-	const BAR_TOP = 66;
+	const BAR_TOP = 74;
 
 	const panelX = (index: number) => 24 + index * (PANEL_W + 8);
 
@@ -61,24 +61,24 @@
 		return out;
 	});
 
-	const metricsTop = 300;
+	const metricsTop = 292;
 </script>
 
 <figure>
 	<svg viewBox="0 0 {WIDTH} {HEIGHT}" role="img" aria-label={ariaLabel(profiles)}>
 		{#each profiles as profile (profile.shop.id)}
-			<text class="shop-name" x={profile.left} y="24">{profile.shop.name}</text>
-			<text class="shop-meta" x={profile.left} y="41">{profile.total} tickets</text>
+			<text class="shop-name" x={profile.left} y="20">{profile.shop.name}</text>
+			<text class="shop-meta" x={profile.left} y="37">{profile.total} tickets</text>
 
 			{#each ticks as tick (tick)}
 				<line
 					class="grid"
 					x1={profile.left + (tick / maxShare) * BAR_MAX}
 					x2={profile.left + (tick / maxShare) * BAR_MAX}
-					y1={BAR_TOP - 12}
+					y1={BAR_TOP - 10}
 					y2={BAR_TOP + 14 * (BAR_H + BAR_GAP)}
 				/>
-				<text class="tick-label" x={profile.left + (tick / maxShare) * BAR_MAX} y={BAR_TOP - 18} text-anchor="middle">
+				<text class="tick-label" x={profile.left + (tick / maxShare) * BAR_MAX} y={BAR_TOP - 16} text-anchor="middle">
 					{Math.round(tick * 100)}%
 				</text>
 			{/each}
@@ -94,10 +94,14 @@
 					fill={bar.color}
 				/>
 				{#if i === 0}
+					{@const barWidth = (bar.share / maxShare) * BAR_MAX}
+					{@const inside = barWidth > BAR_MAX * 0.55}
 					<text
 						class="bar-label"
-						x={profile.left + (bar.share / maxShare) * BAR_MAX + 6}
+						class:inside
+						x={inside ? profile.left + barWidth - 5 : profile.left + barWidth + 6}
 						y={BAR_TOP + BAR_H - 1}
+						text-anchor={inside ? 'end' : 'start'}
 					>
 						{bar.name}
 					</text>
@@ -187,6 +191,13 @@
 		font-family: var(--font-ui);
 		font-size: 0.68rem;
 		fill: var(--ink-muted);
+	}
+
+	/* A long first bar swallows its own label rather than reaching into the
+	   neighbouring panel. */
+	.bar-label.inside {
+		fill: var(--surface);
+		font-weight: 600;
 	}
 
 	.metric-name {

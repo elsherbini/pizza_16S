@@ -1,0 +1,74 @@
+<script lang="ts">
+	import OrdinationPlot from '$lib/charts/OrdinationPlot.svelte';
+	import ShepardPlot from '$lib/charts/ShepardPlot.svelte';
+	import Scroller from '$lib/scroll/Scroller.svelte';
+	import Step from '$lib/scroll/Step.svelte';
+	import ActHeader from '$lib/ui/ActHeader.svelte';
+
+	let step = $state(0);
+</script>
+
+<ActHeader
+	act="Act 7"
+	title="When you only trust the ranking"
+	standfirst="NMDS, the Shepard diagram, and what stress is actually measuring."
+/>
+
+<Scroller bind:active={step}>
+	{#snippet graphic(active)}
+		{#if active === 0}
+			<OrdinationPlot method="nmds" metric="bray" stage={3} />
+		{:else}
+			<ShepardPlot stage={active - 1} />
+		{/if}
+	{/snippet}
+
+	<Step index={0}>
+		<p>
+			PCoA tries to reproduce the distances themselves. <strong>NMDS</strong> gives that up and keeps only
+			their ordering: if shop A is further from B than from C, the picture must show that, and by how
+			much is not its problem.
+		</p>
+		<p>
+			For ecological dissimilarities, whose absolute values are hard to defend in the first place,
+			that is usually the better trade. This is <code>metaMDS()</code> in vegan, and it is the plot most
+			microbial ecology papers print.
+		</p>
+	</Step>
+
+	<Step index={1}>
+		<p>
+			To see what the fit is doing, plot every pair twice. Horizontal is what Bray-Curtis said;
+			vertical is what the picture drew. All 595 pairs, one dot each. This is a
+			<strong>Shepard diagram</strong>.
+		</p>
+	</Step>
+
+	<Step index={2}>
+		<p>
+			NMDS is not fitting a straight line through that cloud. It fits the best non-decreasing step
+			function it can, by isotonic regression, and then moves the points to close the gap between the
+			dots and the steps.
+		</p>
+		<p>
+			Any monotone relationship at all is a perfect fit. That freedom is the whole method, and it is
+			why an NMDS plot has no units on either axis.
+		</p>
+	</Step>
+
+	<Step index={3}>
+		<p>The vertical ticks are the residuals. Stress is their size relative to the distances drawn.</p>
+		<p class="formula">stress = &radic;( &sum;(d - d&#770;)&sup2; / &sum; d&sup2; )</p>
+		<p>
+			Kruskal's rules of thumb: under 0.05 excellent, under 0.1 good, under 0.2 usable, over 0.2 not
+			worth reading. This fit reaches 0.077 after 115 accepted steps, starting from the PCoA solution
+			the way <code>metaMDS</code> does.
+		</p>
+		<p>
+			That PCoA starting configuration scores 0.147 on the same criterion. NMDS wins because it spent
+			the whole run optimising precisely this quantity and PCoA never looked at it. What you give up
+			is real: NMDS axes carry no variance explained, can be rotated or reflected without changing
+			anything, and cannot be compared between studies.
+		</p>
+	</Step>
+</Scroller>

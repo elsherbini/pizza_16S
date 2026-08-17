@@ -4,6 +4,11 @@
 	import ActEvenness from '$lib/acts/ActEvenness.svelte';
 	import ActRarefaction from '$lib/acts/ActRarefaction.svelte';
 	import ActBeta from '$lib/acts/ActBeta.svelte';
+	import ActMatrix from '$lib/acts/ActMatrix.svelte';
+	import ActPcoa from '$lib/acts/ActPcoa.svelte';
+	import ActNmds from '$lib/acts/ActNmds.svelte';
+	import ActReading from '$lib/acts/ActReading.svelte';
+	import ActCoda from '$lib/acts/ActCoda.svelte';
 </script>
 
 <svelte:head>
@@ -31,6 +36,11 @@
 	<ActEvenness />
 	<ActRarefaction />
 	<ActBeta />
+	<ActMatrix />
+	<ActPcoa />
+	<ActNmds />
+	<ActReading />
+	<ActCoda />
 </main>
 
 <style>

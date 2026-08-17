@@ -159,6 +159,63 @@ export function configurationDistances(coordinates: number[][], dimensions: numb
 }
 
 /**
+ * Centre a configuration, rotate it onto its own principal axes, and fix the
+ * otherwise arbitrary sign.
+ *
+ * Neither PCoA nor NMDS pins down orientation: rotating or reflecting the whole
+ * cloud leaves every distance identical, so the raw output can arrive mirrored
+ * or spun for no reason the reader could infer. `vegan::metaMDS` rotates its
+ * result the same way. Nothing about the fit changes; only which way up it is
+ * drawn.
+ */
+export function rotateToPrincipalAxes(coordinates: number[][], dimensions = 2): number[][] {
+	const n = coordinates.length;
+	if (n === 0) return [];
+
+	const centred = (() => {
+		const means = new Array<number>(dimensions).fill(0);
+		for (const row of coordinates) {
+			for (let k = 0; k < dimensions; k++) means[k] += (row[k] ?? 0) / n;
+		}
+		return coordinates.map((row) =>
+			Array.from({ length: dimensions }, (_, k) => (row[k] ?? 0) - means[k])
+		);
+	})();
+
+	const covariance = Array.from({ length: dimensions }, (_, a) =>
+		Array.from({ length: dimensions }, (_, b) => {
+			let sum = 0;
+			for (const row of centred) sum += row[a] * row[b];
+			return sum / n;
+		})
+	);
+
+	const { vectors } = jacobiEigen(covariance);
+
+	const rotated = centred.map((row) =>
+		Array.from({ length: dimensions }, (_, k) => {
+			let value = 0;
+			for (let a = 0; a < dimensions; a++) value += row[a] * vectors[a][k];
+			return value;
+		})
+	);
+
+	// Sign convention: the point furthest along each axis sits on the positive
+	// side, so the same data always draws the same way round.
+	for (let k = 0; k < dimensions; k++) {
+		let extreme = 0;
+		for (const row of rotated) {
+			if (Math.abs(row[k]) > Math.abs(extreme)) extreme = row[k];
+		}
+		if (extreme < 0) {
+			for (const row of rotated) row[k] = -row[k];
+		}
+	}
+
+	return rotated;
+}
+
+/**
  * Pool adjacent violators. Returns the closest non-decreasing sequence to
  * `values` in the least-squares sense, which is the monotone fit NMDS uses to
  * turn observed dissimilarities into target disparities.

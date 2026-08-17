@@ -75,8 +75,13 @@
 
 	const sortedLayout = $derived.by<Placed[]>(() => {
 		const tallest = sold[0]?.count ?? 1;
-		// Compress the pile rather than letting a tall column run off the top.
-		const step = Math.min(TICKET_H + 2, (BASELINE - 30) / tallest);
+		// Compress the pile rather than letting a tall column run off the top. The
+		// bottom ticket rests exactly on the baseline, so a dense column reads as a
+		// solid bar and a sparse one still reads as separate tickets.
+		const step = Math.min(
+			TICKET_H + 2,
+			(BASELINE - 30 - TICKET_H) / Math.max(tallest - 1, 1)
+		);
 		const depths = new Map<string, number>();
 		const columnOf = new Map(sold.map((entry, i) => [entry.pizza.id, i]));
 
@@ -87,7 +92,7 @@
 			return {
 				...ticket,
 				x: columnLeft + column * columnWidth + (columnWidth - TICKET_W) / 2,
-				y: BASELINE - (depth + 1) * step
+				y: BASELINE - depth * step - TICKET_H
 			};
 		});
 	});

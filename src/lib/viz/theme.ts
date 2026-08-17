@@ -34,7 +34,7 @@ export const STYLE_COLOR: Record<ShopStyle, string> = {
 	neapolitan: 'var(--style-neapolitan)',
 	detroit: 'var(--style-detroit)',
 	fusion: 'var(--style-fusion)',
-	experimental: 'var(--style-experimental)'
+	experimental: 'var(--series-4)'
 };
 
 /**

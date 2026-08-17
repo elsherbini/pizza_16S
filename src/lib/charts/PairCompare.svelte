@@ -14,7 +14,7 @@
 	 */
 	import { brayCurtis, jaccard, relativeAbundance } from '$lib/diversity/beta';
 	import { countVector, pizzaById, pizzaIds, type Shop } from '$lib/data/index';
-	import { HERO_COLOR, formatNumber } from '$lib/viz/theme';
+	import { formatNumber } from '$lib/viz/theme';
 
 	interface Props {
 		a: Shop;
@@ -36,8 +36,12 @@
 		b: relativeAbundance(countVector(b))
 	});
 
-	const colorA = $derived(HERO_COLOR[a.id] ?? 'var(--series-1)');
-	const colorB = $derived(HERO_COLOR[b.id] ?? 'var(--series-2)');
+	// A fixed two-series pair rather than each shop's own colour. Whichever two
+	// shops are on screen, this chart only ever shows two, so it gets the pair
+	// with the widest separation: blue against orange clears the normal-vision
+	// floor at delta-E 33.6, where two mid-palette hues would not.
+	const colorA = 'var(--series-1)';
+	const colorB = 'var(--series-2)';
 
 	const rows = $derived.by(() =>
 		pizzaIds

@@ -22,8 +22,8 @@
 	let { shops, q = $bindable(1) }: Props = $props();
 
 	const WIDTH = 640;
-	const HEIGHT = 400;
-	const MARGIN = { top: 24, right: 132, bottom: 52, left: 54 };
+	const HEIGHT = 414;
+	const MARGIN = { top: 24, right: 132, bottom: 62, left: 54 };
 	const Q_MAX = 4;
 
 	const series = $derived(

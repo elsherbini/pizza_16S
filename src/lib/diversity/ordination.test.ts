@@ -1,6 +1,13 @@
 import { describe, expect, test } from 'vitest';
 import { brayCurtis, distanceMatrix } from './beta';
-import { configurationDistances, kruskalStress, nmds, pcoa, shepard } from './ordination';
+import {
+	configurationDistances,
+	kruskalStress,
+	nmds,
+	pcoa,
+	rotateToPrincipalAxes,
+	shepard
+} from './ordination';
 
 /** Six points in a plane, so the true answer is known before we start. */
 const PLANE_POINTS = [
@@ -199,6 +206,66 @@ describe('nmds', () => {
 		const result = nmds(PLANE_DISTANCES, { dimensions: 2, maxIterations: 500 });
 		expect(result.converged).toBe(true);
 		expect(result.stressHistory.length).toBeLessThan(500);
+	});
+});
+
+describe('rotateToPrincipalAxes', () => {
+	const tilted = [
+		[1, 1],
+		[2, 2],
+		[3, 3.2],
+		[4, 3.8],
+		[5, 5.4],
+		[2.5, 3.5]
+	];
+
+	test('leaves every pairwise distance untouched', () => {
+		const rotated = rotateToPrincipalAxes(tilted, 2);
+		const before = configurationDistances(tilted, 2);
+		const after = configurationDistances(rotated, 2);
+		for (let i = 0; i < tilted.length; i++) {
+			for (let j = 0; j < tilted.length; j++) {
+				expect(after[i][j]).toBeCloseTo(before[i][j], 10);
+			}
+		}
+	});
+
+	test('puts the widest spread on the first axis', () => {
+		const rotated = rotateToPrincipalAxes(tilted, 2);
+		const variance = (axis: number) => {
+			const values = rotated.map((row) => row[axis]);
+			const mean = values.reduce((s, v) => s + v, 0) / values.length;
+			return values.reduce((s, v) => s + (v - mean) ** 2, 0) / values.length;
+		};
+		expect(variance(0)).toBeGreaterThan(variance(1));
+	});
+
+	test('centres the result on the origin', () => {
+		const rotated = rotateToPrincipalAxes(tilted, 2);
+		for (let axis = 0; axis < 2; axis++) {
+			const mean = rotated.reduce((s, row) => s + row[axis], 0) / rotated.length;
+			expect(mean).toBeCloseTo(0, 10);
+		}
+	});
+
+	test('fixes the arbitrary sign so the picture is stable between runs', () => {
+		const rotated = rotateToPrincipalAxes(tilted, 2);
+		const flipped = rotateToPrincipalAxes(
+			tilted.map((row) => [-row[0], -row[1]]),
+			2
+		);
+		for (let axis = 0; axis < 2; axis++) {
+			const extreme = rotated.reduce((best, row) =>
+				Math.abs(row[axis]) > Math.abs(best[axis]) ? row : best
+			);
+			expect(extreme[axis]).toBeGreaterThan(0);
+		}
+		// The same cloud, negated, must land in the same place.
+		expect(flipped[0][0]).toBeCloseTo(rotated[0][0], 10);
+	});
+
+	test('is deterministic', () => {
+		expect(rotateToPrincipalAxes(tilted, 2)).toEqual(rotateToPrincipalAxes(tilted, 2));
 	});
 });
 
