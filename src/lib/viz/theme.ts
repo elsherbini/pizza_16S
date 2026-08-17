@@ -37,6 +37,22 @@ export const STYLE_COLOR: Record<ShopStyle, string> = {
 	experimental: 'var(--style-experimental)'
 };
 
+/**
+ * The hero cast keeps one colour each across Acts 1 to 4, where the piece is
+ * about these five shops. From Act 5 on the charts are about the field, colour
+ * switches to style, and the heroes are identified by an outlined marker and a
+ * direct label instead. Both sets were run through the palette validator; in
+ * light mode three of these five sit under 3:1, so every line is directly
+ * labelled at its end rather than relying on the legend.
+ */
+export const HERO_COLOR: Record<string, string> = {
+	vinnies: 'var(--series-1)',
+	sono: 'var(--series-2)',
+	ginos: 'var(--series-3)',
+	forno: 'var(--series-4)',
+	vinnies_uptown: 'var(--series-5)'
+};
+
 export type MarkerShape = 'circle' | 'diamond';
 
 export const STYLE_SHAPE: Record<ShopStyle, MarkerShape> = {

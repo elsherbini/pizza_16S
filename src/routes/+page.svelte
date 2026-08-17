@@ -1,5 +1,9 @@
 <script lang="ts">
 	import ActSnapshot from '$lib/acts/ActSnapshot.svelte';
+	import ActRichness from '$lib/acts/ActRichness.svelte';
+	import ActEvenness from '$lib/acts/ActEvenness.svelte';
+	import ActRarefaction from '$lib/acts/ActRarefaction.svelte';
+	import ActBeta from '$lib/acts/ActBeta.svelte';
 </script>
 
 <svelte:head>
@@ -23,6 +27,10 @@
 	</section>
 
 	<ActSnapshot />
+	<ActRichness />
+	<ActEvenness />
+	<ActRarefaction />
+	<ActBeta />
 </main>
 
 <style>
