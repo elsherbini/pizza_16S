@@ -13,7 +13,7 @@
 		"test": "vitest run",
 		"test:watch": "vitest",
 		"build:gh": "BASE_PATH=/pizza_16S vite build",
-		"deploy": "npm run build:gh && gh-pages -d build --dotfiles"
+		"deploy": "bash scripts/deploy-pages.sh"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.1",
@@ -30,7 +30,6 @@
 		"d3-scale": "^4.0.2",
 		"d3-scale-chromatic": "^3.1.0",
 		"d3-shape": "^3.2.0",
-		"gh-pages": "^6.3.0",
 		"playwright": "^1.62.1",
 		"svelte": "^5.56.1",
 		"svelte-check": "^4.6.0",
