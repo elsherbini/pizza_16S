@@ -1,0 +1,105 @@
+{
+	"$comment": "Five hand-built samples. Every count is chosen so a specific metric does something the previous metric could not see. Do not regenerate these; the contrasts are the teaching material.",
+	"shops": [
+		{
+			"id": "vinnies",
+			"name": "Vinnie's Slice Shop",
+			"style": "ny_slice",
+			"neighbourhood": "Bay Ridge",
+			"role": "Twelve types, and four out of five tickets are the same slice.",
+			"counts": {
+				"plain_cheese": 190,
+				"pepperoni": 20,
+				"sicilian_square": 8,
+				"grandma_slice": 6,
+				"white_slice": 4,
+				"sausage_peppers": 3,
+				"mushroom": 3,
+				"buffalo_chicken": 2,
+				"vodka_slice": 1,
+				"meat_lovers": 1,
+				"veggie_supreme": 1,
+				"hawaiian": 1
+			}
+		},
+		{
+			"id": "sono",
+			"name": "Sono Pizzeria Napoletana",
+			"style": "neapolitan",
+			"neighbourhood": "Carroll Gardens",
+			"role": "Also twelve types, and the orders are spread across all of them.",
+			"counts": {
+				"margherita": 24,
+				"marinara": 18,
+				"diavola": 18,
+				"quattro_formaggi": 16,
+				"prosciutto_rucola": 16,
+				"bufala_dop": 15,
+				"capricciosa": 15,
+				"ortolana": 14,
+				"bianca_patate": 14,
+				"mushroom_truffle": 10,
+				"nduja": 10,
+				"cacio_e_pepe": 10
+			}
+		},
+		{
+			"id": "ginos",
+			"name": "Gino's Corner",
+			"style": "ny_slice",
+			"neighbourhood": "Astoria",
+			"role": "Five types, sold in near-equal numbers. Even, but not varied.",
+			"counts": {
+				"plain_cheese": 32,
+				"pepperoni": 31,
+				"mushroom": 30,
+				"sausage_peppers": 29,
+				"grandma_slice": 28
+			}
+		},
+		{
+			"id": "forno",
+			"name": "Forno Sperimentale",
+			"style": "experimental",
+			"neighbourhood": "Bushwick",
+			"role": "A forty-item rotating menu on a night when almost nobody came in.",
+			"counts": {
+				"hot_honey_soppressata": 8,
+				"mortadella_pistachio": 6,
+				"clam_pie": 5,
+				"nduja": 3,
+				"cacio_e_pepe": 3,
+				"mushroom_truffle": 1,
+				"bianca_patate": 1,
+				"ortolana": 1,
+				"capricciosa": 1,
+				"quattro_formaggi": 1,
+				"marinara": 1,
+				"detroit_red_top": 1,
+				"cup_char_pepperoni": 1,
+				"eggplant_parm": 1
+			}
+		},
+		{
+			"id": "vinnies_uptown",
+			"name": "Vinnie's Uptown",
+			"style": "ny_slice",
+			"neighbourhood": "Morningside Heights",
+			"role": "The second location. Same twelve types on the board, a completely different sales mix.",
+			"counts": {
+				"vodka_slice": 60,
+				"grandma_slice": 48,
+				"white_slice": 34,
+				"buffalo_chicken": 26,
+				"plain_cheese": 20,
+				"veggie_supreme": 12,
+				"mushroom": 8,
+				"pepperoni": 5,
+				"sicilian_square": 3,
+				"meat_lovers": 2,
+				"sausage_peppers": 1,
+				"hawaiian": 1
+			}
+		}
+	]
+}
