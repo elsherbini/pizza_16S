@@ -45,7 +45,9 @@
 		padding: 2rem 0;
 	}
 
-	.step:last-child {
-		min-height: 60vh;
-	}
+	/*
+	 * The final step keeps the same height as the rest. The breathing room after
+	 * it lives on the track itself, so the last transition has time to settle
+	 * before the next act scrolls into view.
+	 */
 </style>

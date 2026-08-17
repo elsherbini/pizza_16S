@@ -22,9 +22,13 @@
 
 	<Step index={0}>
 		<p>
-			Richness depends on how long you watched. Read a shop's tickets one at a time and plot how many
-			distinct pizza types you have seen after each one, and you get a
-			<strong>rarefaction curve</strong>.
+			If one shop reports more pizza types than another, is it more varied, or was it simply busier?
+			Observed richness cannot separate those two, because it rises with every additional ticket you
+			read.
+		</p>
+		<p>
+			Reading a shop's tickets one at a time, plotting how many distinct types you have seen after
+			each one, makes the difference visible. That is a <strong>rarefaction curve</strong>.
 		</p>
 		<p>
 			These are computed analytically, the way <code>vegan::rarefy</code> does it, from Hurlbert's 1971

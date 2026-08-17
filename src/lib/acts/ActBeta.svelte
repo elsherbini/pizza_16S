@@ -30,8 +30,12 @@
 
 	<Step index={0}>
 		<p>
-			Alpha diversity describes the inside of one shop. <strong>Beta diversity</strong> is the distance
-			between two of them.
+			Every number so far has described the inside of one shop. What would it mean to say that two
+			shops resemble each other?
+		</p>
+		<p>
+			<strong>Beta diversity</strong> is the family of answers: a distance between two samples rather
+			than a summary of one.
 		</p>
 		<p>
 			Here are Vinnie's two locations back to back, one row per pizza type, each converted to shares
@@ -41,8 +45,8 @@
 
 	<Step index={1}>
 		<p>
-			First question: do they serve the same kinds of pizza? Ignore the volumes and look only at
-			which types appear at all.
+			Do they serve the same kinds of pizza? Ignore the volumes entirely and look only at which types
+			appear at all.
 		</p>
 		<p class="formula">J = 1 - |A &cap; B| / |A &cup; B|</p>
 		<p>
@@ -52,7 +56,7 @@
 	</Step>
 
 	<Step index={2}>
-		<p>Second question: do they serve them in the same proportions?</p>
+		<p>Do they serve them in the same proportions?</p>
 		<p class="formula">
 			BC = &sum; |a<sub>i</sub> - b<sub>i</sub>| / &sum; (a<sub>i</sub> + b<sub>i</sub>)
 		</p>

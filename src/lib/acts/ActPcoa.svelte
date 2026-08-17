@@ -20,13 +20,15 @@
 
 	<Step index={0}>
 		<p>
-			Here is the problem stated backwards. You are handed the distances between thirty-five towns
-			and asked to draw the map they came from.
+			Suppose someone handed you the driving distances between thirty-five towns and asked you to
+			draw the map. Could you? For distances that came from real positions, very nearly so: the
+			distances pin the arrangement down up to rotation and reflection.
 		</p>
 		<p>
-			<strong>Principal coordinates analysis</strong> does exactly that. Gower's double-centring turns
-			the squared distances into a cross-product matrix, its eigenvectors give the directions, and the
-			eigenvalues say how much of the structure each direction carries. It is
+			<strong>Principal coordinates analysis</strong> does that with samples in place of towns.
+			Gower's double-centring turns the squared distances into a cross-product matrix, its
+			eigenvectors give the directions, and the eigenvalues say how much of the structure each
+			direction carries. It is
 			<code>cmdscale()</code> in R, <code>skbio.stats.ordination.pcoa</code> in Python, and
 			<code>qiime diversity pcoa</code> at the command line.
 		</p>
@@ -59,7 +61,7 @@
 	</Step>
 
 	<Step index={3}>
-		<p>Read the axes carefully, because they are not what they look like.</p>
+		<p>The axes repay a closer look, because they carry less than their prominence suggests.</p>
 		<p>
 			Axis 1 carries 46.9% of the positive eigenvalue total and axis 2 carries 25.4%, so this picture
 			holds 72.4% of the structure in the matrix and has discarded the rest. The axes have no units.

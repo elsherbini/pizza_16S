@@ -28,8 +28,8 @@
 
 	<Step index={0}>
 		<p>
-			Both controls above the plot are live. Change the method and the picture shifts a little.
-			Change the distance metric and it rearranges.
+			Both controls above the plot are live. Changing the method shifts the picture a little;
+			changing the distance metric rearranges it.
 		</p>
 	</Step>
 

@@ -38,7 +38,11 @@
 	</Step>
 
 	<Step index={1}>
-		<p>Shannon's index measures how hard it is to guess what the next ticket will say.</p>
+		<p>
+			Suppose you stood at the counter and tried to guess what the next ticket would say. At Vinnie's
+			you would be right most of the time; at Sono's you would rarely be. Shannon's index measures
+			that uncertainty.
+		</p>
 		<p class="formula">H' = -&sum; p<sub>i</sub> ln p<sub>i</sub></p>
 		<p>
 			<em>p<sub>i</sub></em> is the share of tickets going to type <em>i</em>. When one pizza takes
@@ -53,29 +57,31 @@
 
 	<Step index={2}>
 		<p>
-			Simpson's index asks something you could act out at the counter. Two customers walk in and
-			order independently. What is the chance they order the same pizza?
+			Imagine two customers walking into the same pizzeria and ordering without consulting each
+			other. How often would they order the same pizza?
 		</p>
 		<p class="formula">D = &sum; p<sub>i</sub><sup>2</sup></p>
 		<p>
-			At Vinnie's, 0.64. Nearly two thirds of customer pairs match, and almost always on plain
-			cheese. At Sono's, 0.09. Some tools report 1 - D instead and call that Simpson diversity, and
-			scikit-bio reserves the name <code>simpson</code> for that form while calling the sum of
-			squares <code>dominance</code>. Check which one your pipeline means before comparing anything.
+			That probability is Simpson's index. At Vinnie's, 0.64: nearly two thirds of customer pairs
+			match, and almost always on plain cheese. At Sono's, 0.09. Some tools report 1 - D instead and
+			call that Simpson diversity, and scikit-bio reserves the name <code>simpson</code> for that
+			form while calling the sum of squares <code>dominance</code>. Check which one your pipeline
+			means before comparing anything.
 		</p>
 		<p>
-			Pielou's evenness divides Shannon by its maximum, J' = H' / ln S, which strips richness back
-			out and leaves only how level the profile is. Gino's five types score 1.00. Vinnie's twelve
+			How level is a shop's profile once richness is set aside? Pielou's evenness answers by dividing
+			Shannon by its maximum, J' = H' / ln S, leaving only how evenly the tickets spread across
+			whatever types are on the board. Gino's five types score 1.00. Vinnie's twelve
 			score 0.36.
 		</p>
 	</Step>
 
 	<Step index={3}>
 		<p>
-			Shannon is in nats, Simpson is a probability, Pielou is a ratio. Three metrics, three units,
-			and no way to say that one shop is twice as diverse as another.
+			Which of those three numbers should you report? Shannon is in nats, Simpson is a probability,
+			Pielou is a ratio, and none of them lets you say that one shop is twice as diverse as another.
 		</p>
-		<p>Hill numbers put all of them in a single unit, the effective number of types.</p>
+		<p>Hill numbers put all three on one scale, the effective number of types.</p>
 		<p class="formula">
 			<sup>q</sup>D = ( &sum; p<sub>i</sub><sup>q</sup> )<sup>1/(1-q)</sup>
 		</p>

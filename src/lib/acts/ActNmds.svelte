@@ -25,14 +25,14 @@
 
 	<Step index={0}>
 		<p>
-			PCoA tries to reproduce the distances themselves. <strong>NMDS</strong> gives that up and keeps only
-			their ordering: if shop A is further from B than from C, the picture must show that, and by how
-			much is not its problem.
+			How much of a Bray-Curtis value would you defend: its magnitude, or only its ordering? For most
+			ecological dissimilarities the honest answer is the ordering.
 		</p>
 		<p>
-			For ecological dissimilarities, whose absolute values are hard to defend in the first place,
-			that is usually the better trade. This is <code>metaMDS()</code> in vegan, and it is the plot most
-			microbial ecology papers print.
+			<strong>NMDS</strong> takes that answer seriously. It gives up on reproducing the distances and
+			keeps only their rank order: if shop A is further from B than from C, the picture must show
+			that, and by how much is not its problem. This is <code>metaMDS()</code> in vegan, and it is
+			the plot most microbial ecology papers print.
 		</p>
 	</Step>
 

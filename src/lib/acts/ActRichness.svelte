@@ -22,12 +22,12 @@
 
 	<Step index={0}>
 		<p>
-			Start with the question you can answer by counting. How many different pizzas did each shop
-			sell tonight?
+			How diverse were the sales at each of these pizzerias? One way to answer that is to count how
+			many different pizzas each of them sold tonight.
 		</p>
 		<p>
-			One square per pizza type that appeared at least once: Vinnie's on the left, Sono Pizzeria
-			Napoletana in the middle, Gino's Corner on the right.
+			One square per pizza type that appeared on the spike at least once: Vinnie's on the left, Sono
+			Pizzeria Napoletana in the middle, Gino's Corner on the right.
 		</p>
 	</Step>
 
@@ -45,7 +45,8 @@
 	<Step index={2}>
 		<p>
 			By that measure Vinnie's and Sono's are the same community, and Gino's is less than half as
-			diverse as either. Now size each square by the share of tickets it actually accounted for.
+			diverse as either. Is that a fair description of these three shops? Size each square by the
+			share of tickets it actually accounted for and see.
 		</p>
 		<p>
 			Four out of five tickets at Vinnie's say the same thing: plain cheese. The other eleven types

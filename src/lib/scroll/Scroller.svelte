@@ -79,6 +79,16 @@
 		padding: 2rem 1.25rem 0;
 	}
 
+	/*
+	 * Runway past the last step. Without it the closing transition of an act is
+	 * still running while the next act's header is already on screen.
+	 */
+	.steps::after {
+		content: '';
+		display: block;
+		height: 60vh;
+	}
+
 	@media (min-width: 60rem) {
 		.scroller {
 			grid-template-columns: minmax(0, 1.35fr) minmax(22rem, 0.85fr);

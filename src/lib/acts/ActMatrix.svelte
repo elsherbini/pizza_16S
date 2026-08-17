@@ -20,8 +20,8 @@
 
 	<Step index={0}>
 		<p>
-			Beta diversity gives you one number for one pair. With five shops there are ten of them, and
-			you can simply read the table.
+			One number describes one pair. With five shops there are ten of them, few enough to read
+			straight off the table.
 		</p>
 		<p>
 			Rows and columns are the same five shops, so the diagonal is each shop against itself and the
