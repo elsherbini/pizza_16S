@@ -20,7 +20,7 @@
 	let { shops, stage }: Props = $props();
 
 	const WIDTH = 720;
-	const HEIGHT = 470;
+	const HEIGHT = 415;
 	const PANEL_W = 224;
 	const GRID_COLUMNS = 5;
 	const SQUARE = 26;

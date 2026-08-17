@@ -49,21 +49,28 @@
 		align-items: start;
 	}
 
+	/*
+	 * On narrow screens the pane takes its height from the graphic rather than a
+	 * fixed slice of the viewport, so a short chart does not leave a band of
+	 * empty page above the text. `max-height` still keeps a tall one from
+	 * swallowing the screen.
+	 */
 	.graphic-track {
 		position: sticky;
 		top: 0;
 		z-index: 1;
-		height: 62vh;
+		max-height: 62vh;
 		background: var(--plane);
 		border-bottom: 1px solid var(--hairline);
 	}
 
 	.graphic-pane {
-		height: 100%;
+		max-height: 62vh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		padding: 0.75rem 1rem;
+		overflow: hidden;
 	}
 
 	.steps {
@@ -84,10 +91,13 @@
 
 		.graphic-track {
 			height: 100vh;
+			max-height: none;
 			border-bottom: none;
 		}
 
 		.graphic-pane {
+			height: 100%;
+			max-height: none;
 			padding: 3rem 1rem 3rem 2rem;
 		}
 
