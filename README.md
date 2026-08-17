@@ -24,6 +24,27 @@ npm run check        # svelte-check
 `/gallery` renders every chart at every stage on one static page, which is the fastest way
 to review a visualisation without scrolling through eight acts to reach it.
 
+## Publishing
+
+Live at <https://elsherbini.github.io/pizza_16S/>, served from the `gh-pages` branch.
+
+```sh
+npm run deploy
+```
+
+That builds with `BASE_PATH=/pizza_16S`, because GitHub Pages serves a project site from a
+subdirectory and the assets would otherwise resolve against the domain root. Local `dev` and
+`preview` leave the base empty, so they are unaffected.
+
+The deploy itself is `scripts/deploy-pages.sh` rather than the `gh-pages` package. That
+package seeds a new deploy branch from the default branch and does not clean up what it
+inherits, which put `.gitignore`, `.npmrc`, and `.vscode/` on the deploy branch next to the
+site. The script publishes an orphan commit instead, so the branch contains the build output
+and nothing else.
+
+`static/.nojekyll` is required: without it Pages runs Jekyll, which ignores directories
+beginning with an underscore, and SvelteKit puts everything in `_app`.
+
 ## Layout
 
 ```

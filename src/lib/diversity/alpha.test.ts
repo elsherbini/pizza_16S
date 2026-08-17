@@ -6,6 +6,7 @@ import {
 	observedRichness,
 	pielou,
 	rarefactionCurve,
+	rarefiedRichness,
 	shannon,
 	simpson,
 	totalCount
@@ -147,6 +148,41 @@ describe('goodsCoverage', () => {
 	test('drops as singletons accumulate', () => {
 		// 3 singletons out of 10 tickets
 		expect(goodsCoverage([7, 1, 1, 1])).toBeCloseTo(0.7, 12);
+	});
+});
+
+describe('rarefiedRichness', () => {
+	test('at full depth it returns observed richness', () => {
+		expect(rarefiedRichness([5, 3, 2], 10)).toBeCloseTo(3, 10);
+	});
+
+	test('at depth 1 exactly one type has been seen', () => {
+		expect(rarefiedRichness([5, 3, 2], 1)).toBeCloseTo(1, 12);
+	});
+
+	test('matches the hand-computed Hurlbert expectation', () => {
+		expect(rarefiedRichness([2, 1], 2)).toBeCloseTo(1 + 2 / 3, 12);
+	});
+
+	test('is defined at every depth, not only at sampled ones', () => {
+		// The chart reads this at an arbitrary slider position, so it cannot be
+		// restricted to whatever depths a curve happened to be sampled at.
+		const counts = [190, 20, 8, 6, 4, 3, 3, 2, 1, 1, 1, 1];
+		// Cross-checked against scipy in the reference fixture; the prose quotes 5.3.
+		expect(rarefiedRichness(counts, 34)).toBeCloseTo(5.302236, 5);
+		expect(rarefiedRichness(counts, 33)).toBeLessThan(rarefiedRichness(counts, 34));
+	});
+
+	test('returns 0 for a depth of 0 or an empty sample', () => {
+		expect(rarefiedRichness([5, 3], 0)).toBe(0);
+		expect(rarefiedRichness([], 5)).toBe(0);
+	});
+
+	test('agrees with the curve at every depth the curve reports', () => {
+		const counts = [40, 20, 10, 5, 3, 1, 1, 1];
+		for (const point of rarefactionCurve(counts)) {
+			expect(point.expectedRichness).toBeCloseTo(rarefiedRichness(counts, point.depth), 12);
+		}
 	});
 });
 

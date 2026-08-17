@@ -10,7 +10,13 @@
 	 */
 	import { scaleLinear } from 'd3-scale';
 	import { line } from 'd3-shape';
-	import { goodsCoverage, observedRichness, rarefactionCurve, totalCount } from '$lib/diversity/alpha';
+	import {
+		goodsCoverage,
+		observedRichness,
+		rarefactionCurve,
+		rarefiedRichness,
+		totalCount
+	} from '$lib/diversity/alpha';
 	import { countVector, type Shop } from '$lib/data/index';
 	import { HERO_COLOR, formatNumber, formatPercent } from '$lib/viz/theme';
 
@@ -65,16 +71,19 @@
 			.y((d) => y(d.expectedRichness))
 	);
 
-	/** Where each shop sits if you read only `depth` of its tickets. */
+	/**
+	 * Where each shop sits if you read only `depth` of its tickets, evaluated at
+	 * exactly that depth. Snapping to the nearest sampled curve point instead put
+	 * a different number on the chart than the one the prose quotes.
+	 */
 	const atDepth = $derived(
 		series.map((s) => {
 			const reachable = s.total >= depth;
-			const point = reachable
-				? s.curve.reduce((best, p) =>
-						Math.abs(p.depth - depth) < Math.abs(best.depth - depth) ? p : best
-					)
-				: null;
-			return { ...s, reachable, value: point?.expectedRichness ?? null };
+			return {
+				...s,
+				reachable,
+				value: reachable ? rarefiedRichness(s.counts, depth) : null
+			};
 		})
 	);
 

@@ -146,6 +146,42 @@ export interface RarefactionPoint {
 }
 
 /**
+ * Hurlbert's expected richness at one sampling depth:
+ *
+ *   E[S_n] = sum_i [ 1 - C(N - x_i, n) / C(N, n) ]
+ *
+ * Each term is one minus the probability of missing type i entirely. Exposed
+ * separately from the curve because anything reading a value at an arbitrary
+ * depth, a slider for instance, must evaluate it there rather than snap to
+ * whichever depths the curve happened to be sampled at.
+ */
+export function rarefiedRichness(counts: Counts, depth: number): number {
+	const n = totalCount(counts);
+	if (n === 0 || depth <= 0) return 0;
+	if (depth > n) return NaN;
+
+	const logChooseN = logFactorial(n) - logFactorial(depth) - logFactorial(n - depth);
+
+	let expected = 0;
+	for (const x of counts) {
+		if (x <= 0) continue;
+		const remaining = n - x;
+		// Fewer tickets left than we plan to read, so type x cannot be missed.
+		if (remaining < depth) {
+			expected += 1;
+			continue;
+		}
+		const logMissing =
+			logFactorial(remaining) -
+			logFactorial(depth) -
+			logFactorial(remaining - depth) -
+			logChooseN;
+		expected += 1 - Math.exp(logMissing);
+	}
+	return expected;
+}
+
+/**
  * Analytic rarefaction (Hurlbert 1971): the expected number of types you would
  * have seen had you only read `n` of the tickets.
  *
@@ -168,27 +204,7 @@ export function rarefactionCurve(
 	for (let d = step; d <= n; d += step) depths.add(d);
 	depths.add(n);
 
-	const observed = counts.filter((c) => c > 0);
-	const logChooseN = (k: number) => logFactorial(n) - logFactorial(k) - logFactorial(n - k);
-
 	return [...depths]
 		.sort((a, b) => a - b)
-		.map((depth) => {
-			let expected = 0;
-			for (const x of observed) {
-				const remaining = n - x;
-				// Fewer tickets left than we plan to read, so type x cannot be missed.
-				if (remaining < depth) {
-					expected += 1;
-					continue;
-				}
-				const logMissing =
-					logFactorial(remaining) -
-					logFactorial(depth) -
-					logFactorial(remaining - depth) -
-					logChooseN(depth);
-				expected += 1 - Math.exp(logMissing);
-			}
-			return { depth, expectedRichness: expected };
-		});
+		.map((depth) => ({ depth, expectedRichness: rarefiedRichness(counts, depth) }));
 }
