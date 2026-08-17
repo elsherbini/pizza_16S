@@ -1,0 +1,200 @@
+@import 'tailwindcss';
+
+/*
+ * Palette roles come from the validated reference instance. The three style
+ * hues used in the ordination scatter clear the all-pairs CVD and
+ * normal-vision floors in both modes; light-mode aqua sits at 2.74:1 against
+ * the surface, so every cluster carries a direct label and a table view.
+ */
+:root {
+	color-scheme: light;
+
+	--surface: #fcfcfb;
+	--plane: #f9f9f7;
+	--ink: #0b0b0b;
+	--ink-secondary: #52514e;
+	--ink-muted: #898781;
+	--grid: #e1e0d9;
+	--axis: #c3c2b7;
+	--hairline: rgb(11 11 11 / 0.1);
+
+	--series-1: #2a78d6;
+	--series-2: #eb6834;
+	--series-3: #1baf7a;
+	--series-4: #eda100;
+	--series-5: #e87ba4;
+	--series-7: #4a3aa7;
+
+	--style-ny: var(--series-1);
+	--style-neapolitan: var(--series-2);
+	--style-detroit: var(--series-3);
+	--style-fusion: #898781;
+	--style-experimental: var(--series-7);
+
+	--seq-100: #cde2fb;
+	--seq-250: #86b6ef;
+	--seq-400: #3987e5;
+	--seq-550: #1c5cab;
+	--seq-700: #0d366b;
+
+	--font-prose: ui-serif, Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+	--font-ui: system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:where(:not([data-theme='light'])) {
+		color-scheme: dark;
+
+		--surface: #1a1a19;
+		--plane: #0d0d0d;
+		--ink: #ffffff;
+		--ink-secondary: #c3c2b7;
+		--ink-muted: #898781;
+		--grid: #2c2c2a;
+		--axis: #383835;
+		--hairline: rgb(255 255 255 / 0.1);
+
+		--series-1: #3987e5;
+		--series-2: #d95926;
+		--series-3: #199e70;
+		--series-4: #c98500;
+		--series-5: #d55181;
+		--series-7: #9085e9;
+
+		--style-fusion: #898781;
+
+		--seq-100: #0d366b;
+		--seq-250: #184f95;
+		--seq-400: #2a78d6;
+		--seq-550: #6da7ec;
+		--seq-700: #cde2fb;
+	}
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+
+	--surface: #1a1a19;
+	--plane: #0d0d0d;
+	--ink: #ffffff;
+	--ink-secondary: #c3c2b7;
+	--ink-muted: #898781;
+	--grid: #2c2c2a;
+	--axis: #383835;
+	--hairline: rgb(255 255 255 / 0.1);
+
+	--series-1: #3987e5;
+	--series-2: #d95926;
+	--series-3: #199e70;
+	--series-4: #c98500;
+	--series-5: #d55181;
+	--series-7: #9085e9;
+
+	--seq-100: #0d366b;
+	--seq-250: #184f95;
+	--seq-400: #2a78d6;
+	--seq-550: #6da7ec;
+	--seq-700: #cde2fb;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+body {
+	background: var(--plane);
+	color: var(--ink);
+	font-family: var(--font-prose);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+/* Prose column, sized for reading rather than for filling the window. */
+.prose-column {
+	max-width: 34rem;
+	font-size: 1.0625rem;
+	line-height: 1.65;
+}
+
+.prose-column p + p {
+	margin-top: 1.1em;
+}
+
+.prose-column strong {
+	font-weight: 600;
+}
+
+.ui {
+	font-family: var(--font-ui);
+}
+
+.mono {
+	font-family: var(--font-mono);
+	font-variant-numeric: tabular-nums;
+}
+
+/* Metric names, tool functions, and formula fragments inside running text. */
+.term {
+	font-family: var(--font-ui);
+	font-size: 0.92em;
+	letter-spacing: -0.005em;
+}
+
+code {
+	font-family: var(--font-mono);
+	font-size: 0.88em;
+	background: color-mix(in oklab, var(--ink) 6%, transparent);
+	padding: 0.1em 0.35em;
+	border-radius: 0.25rem;
+}
+
+.formula {
+	font-family: var(--font-mono);
+	font-size: 0.95rem;
+	line-height: 1.7;
+	color: var(--ink);
+	background: var(--surface);
+	border: 1px solid var(--hairline);
+	border-radius: 0.5rem;
+	padding: 0.85rem 1rem;
+	overflow-x: auto;
+}
+
+.caption {
+	font-family: var(--font-ui);
+	font-size: 0.8125rem;
+	line-height: 1.5;
+	color: var(--ink-secondary);
+}
+
+.axis-label {
+	font-family: var(--font-ui);
+	font-size: 0.6875rem;
+	fill: var(--ink-muted);
+}
+
+.tick-label {
+	font-family: var(--font-ui);
+	font-size: 0.6875rem;
+	fill: var(--ink-muted);
+	font-variant-numeric: tabular-nums;
+}
+
+.mark-label {
+	font-family: var(--font-ui);
+	font-size: 0.75rem;
+	fill: var(--ink-secondary);
+}
