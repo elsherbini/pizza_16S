@@ -1,0 +1,160 @@
+# Pizza Alpha/Beta — a scrollytelling explainer for microbial diversity metrics
+
+Design document. 2026-08-17.
+
+## Purpose
+
+Teach the core alpha diversity, beta diversity, and ordination methods used in microbial
+ecology by way of a sustained analogy: **pizzerias are samples, pizza types are species,
+and one Friday night of orders is your count table.**
+
+Audience: graduate students and new bioinformaticians — people who will actually run
+QIIME 2, `vegan`, `phyloseq`, or `scikit-bio`. Real formulas appear on screen. The analogy
+carries intuition; it does not replace the math.
+
+## The spine
+
+A pizzeria is a *sample*. Its full menu is the true community. You never observe the menu.
+You observe the ticket spike from one Friday night. Everything downstream — rarefaction,
+coverage estimation, the entire anxiety about sequencing depth — exists because of that gap.
+
+A recurring margin thread carries the taxonomic-rank idea:
+
+- "Margherita" is a **label**. It is an ASV, an OTU, a species name.
+- The label says nothing about whether the mozzarella was buffalo or cow.
+- Reading the ticket = **16S amplicon sequencing**.
+- Walking into the kitchen and inventorying every ingredient = **shotgun metagenomics**.
+
+Same pizzeria, different resolution.
+
+## Scope
+
+In scope ("core canon"):
+
+| Layer | Metrics |
+|---|---|
+| Alpha | observed richness, Shannon, Simpson / Gini-Simpson, Pielou's evenness, Hill numbers (q = 0, 1, 2) |
+| Sampling | rarefaction curves, Good's coverage, singletons, uneven depth |
+| Beta | Jaccard, Bray-Curtis, the presence-vs-abundance axis, the distance matrix |
+| Ordination | PCoA (classical MDS), NMDS, stress, Shepard plot, variance explained |
+
+Explicitly out of scope, and named as such in the coda so the reader knows what's next:
+Faith's PD and UniFrac (phylogeny), PERMANOVA and betadisper (hypothesis testing),
+compositional data analysis (CLR, Aitchison distance).
+
+Log base is natural log (`ln`) throughout, stated on screen, because `vegan::diversity`
+defaults to `ln` and the base mismatch is a classic silent error.
+
+## Acts
+
+| # | Act | Teaches |
+|---|---|---|
+| 0 | The Friday Night Snapshot | sample, community, count table, menu-vs-orders |
+| 1 | Counting the menu | observed richness — and its blind spot |
+| 2 | Eighty percent plain cheese | Shannon, Simpson, Pielou, Hill numbers |
+| 3 | A slow Tuesday | rarefaction, Good's coverage, uneven depth |
+| 4 | Two shops, one question | Jaccard vs. Bray-Curtis |
+| 5 | Every pair at once | the distance matrix |
+| 6 | Drawing the map | PCoA |
+| 7 | When you only trust the ranking | NMDS, stress, Shepard plot |
+| 8 | Reading it honestly | what clusters do and don't mean |
+| 9 | Where the pizza breaks down | caveats, glossary, what to learn next |
+
+Acts 1-3 follow the hero cast closely. Act 4 is the hinge: one pizzeria becomes two.
+Acts 5-8 zoom out to the 30-shop field. Act 9 dismantles the analogy deliberately.
+
+## The dataset
+
+### Hero cast
+
+Five pizzerias, each engineered as a foil for a specific metric.
+
+| Shop | Tickets | Types | Designed contrast |
+|---|---|---|---|
+| Vinnie's Slice Shop | ~240 | 12 | High richness, brutally low evenness (~190 plain cheese) |
+| Sono Pizzeria Napoletana | ~180 | 12 | **Same richness as Vinnie's**, near-even. The Act 1→2 hinge |
+| Gino's Corner | ~150 | 5 | Low richness, high evenness. Separates the two axes |
+| Forno Sperimentale | ~34 | 14 obs. of 40 | Dead Tuesday, many singletons. The rarefaction act |
+| Vinnie's Uptown | ~220 | 12 | **Identical menu** to Vinnie's (Jaccard = 0), different mix (Bray-Curtis large) |
+
+The Vinnie's / Vinnie's Uptown pair carries the entire presence-vs-abundance lesson in one
+comparison.
+
+### Wider field
+
+~30 shops in three style groups — NY slice, Neapolitan, Detroit square — plus four
+deliberate fusion shops that sit between clusters. Generated from archetype abundance
+profiles with a **seeded PRNG**, so the dataset is deterministic and reproducible across
+runs and machines.
+
+## Architecture
+
+SvelteKit 2 + Svelte 5 (runes), `adapter-static`, Tailwind v4. D3 is used for scales,
+shapes, and interpolators only — Svelte owns the DOM, so every SVG element is a reactive
+template rather than a `d3.select` mutation. Charts re-render from changing state.
+
+```
+src/lib/
+  data/      pizzas.ts      the taxonomy: types, style groups, base/topping tree
+             heroes.ts      the five hand-built count vectors
+             field.ts       30 shops from archetypes, seeded PRNG
+  diversity/ alpha.ts       richness, shannon, simpson, pielou, hill(q),
+                            goodsCoverage, rarefactionCurve
+             beta.ts        jaccard, brayCurtis, distanceMatrix
+             ordination.ts  pcoa  — Gower double-centering + Jacobi eigendecomposition
+                            nmds  — SMACOF with Kruskal stress-1, seeded init
+  scroll/    Scroller.svelte, Step.svelte — IntersectionObserver, sticky graphic
+  charts/    shared axes, legends, color scales
+src/routes/
+  +page.svelte and one component per act
+```
+
+### Scroll mechanic
+
+A sticky graphic pinned in the viewport while text steps scroll past it. Each step sets an
+`activeStep` rune; the visualization *transitions between states* rather than swapping out.
+`prefers-reduced-motion` is honored — the piece degrades to a static, readable article,
+which is also what a screen reader receives.
+
+### Live math
+
+The ordination runs in the browser. PCoA on 30 samples is a 30×30 eigendecomposition,
+which is trivial. NMDS runs SMACOF iterations inside a `requestAnimationFrame` loop, so the
+reader *watches stress drop* instead of reading a definition of it.
+
+The Act 8 closer is a single toggle that recomputes the distance matrix under Jaccard vs.
+Bray-Curtis and re-runs the ordination, so the same 30 shops visibly rearrange. That is the
+demonstration that the choice of distance metric matters more than the choice of ordination
+method.
+
+## Correctness
+
+The numbers on the page must match what `vegan` and `scikit-bio` produce. The diversity
+module is built test-first with Vitest against three tiers.
+
+**Tier 1 — closed-form cases.** Four types at equal abundance: Shannon = ln 4,
+Simpson = 0.25, Pielou = 1.0, Hill q=1 = 4.0. A single-type community: Shannon = 0.
+Disjoint communities: Jaccard = 1, Bray-Curtis = 1. Identical vectors: 0. These catch sign
+errors, log-base errors, and normalization mistakes immediately.
+
+**Tier 2 — cross-language fixtures.** `scripts/reference.py` computes alpha and beta metrics
+on the real hero-cast count table using `scipy` / `scikit-bio` and writes
+`tests/fixtures/reference.json`. The TypeScript implementations are asserted against it to
+~1e-10. If those packages are unavailable, an independent hand-derived fixture is used
+instead, and the substitution is reported rather than silently skipped.
+
+**Tier 3 — ordination invariants.**
+
+- PCoA on a Euclidean distance matrix must reproduce the input geometry *up to rotation and
+  reflection*, so the test asserts recovered pairwise distances, not coordinates.
+- Bray-Curtis is non-Euclidean and produces negative eigenvalues. The test asserts they
+  appear and are small; the page reports the resulting variance-explained caveat honestly
+  rather than hiding it.
+- NMDS stress must be monotonically non-increasing, and must fall below a threshold on a
+  dataset with known structure.
+
+## Non-goals
+
+- No backend, no database, no build-time data fetching. Fully static.
+- No phylogenetic metrics, no hypothesis testing, no CoDA — named in the coda as next steps.
+- No real scraped menus. Order counts would have to be invented regardless.
