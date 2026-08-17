@@ -51,7 +51,6 @@
 	</Step>
 
 	<Step index={2}>
-		<p>Things this plot cannot tell you.</p>
 		<p>
 			The gap between two nearby points is more trustworthy than the gap between two distant ones,
 			because the fit spends its effort where it can. In PCoA the axes are ordered by eigenvalue, so

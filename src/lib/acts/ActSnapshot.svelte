@@ -34,8 +34,8 @@
 
 	<Step index={1}>
 		<p>
-			Read what is printed on each ticket and you learn which pizza it was. Margherita. Plain cheese.
-			Grandma slice.
+			Read what is printed on each ticket and you learn which pizza it was: Margherita, plain cheese,
+			grandma slice.
 		</p>
 		<p>
 			The name is all you get. It says nothing about whether the mozzarella was buffalo or cow, or
@@ -46,10 +46,9 @@
 	</Step>
 
 	<Step index={2}>
-		<p>Sort the tickets into a column for each pizza type.</p>
 		<p>
-			Nothing has been added and nothing thrown away. The same 240 tickets are standing in different
-			piles.
+			Sort the tickets into a column for each pizza type. Nothing has been added and nothing thrown
+			away; the same 240 tickets are standing in different piles.
 		</p>
 	</Step>
 

@@ -46,9 +46,8 @@
 
 	<Step index={2}>
 		<p>
-			NMDS is not fitting a straight line through that cloud. It fits the best non-decreasing step
-			function it can, by isotonic regression, and then moves the points to close the gap between the
-			dots and the steps.
+			What NMDS fits to that cloud is the best non-decreasing step function it can manage, by isotonic
+			regression, after which it moves the points to close the gap between the dots and the steps.
 		</p>
 		<p>
 			Any monotone relationship at all is a perfect fit. That freedom is the whole method, and it is

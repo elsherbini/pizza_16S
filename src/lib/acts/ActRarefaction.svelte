@@ -47,8 +47,8 @@
 
 	<Step index={2}>
 		<p>
-			They are not. Pull the depth back to 34 tickets, the most that all five shops can supply, and
-			read the curves where that line crosses them.
+			Reading those two numbers side by side is the mistake. Pull the depth back to 34 tickets, the
+			most that all five shops can supply, and read the curves where that line crosses them.
 		</p>
 		<p>
 			Forno still has 14, because 34 tickets is all it ever had. Vinnie's drops to 5.3, because a

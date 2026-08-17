@@ -26,16 +26,16 @@
 
 <ActHeader
 	act="Act 9"
-	title="Where the pizza breaks down"
+	title="The limits of the analogy"
 	standfirst="Every analogy has a boundary. Knowing this one's is the last useful thing it can do."
 />
 
 <section class="coda">
 	<div class="prose-column">
 		<p>
-			The count table you have been reading all the way through is not a record of what the
-			pizzeria sold. It is a record of what the counting process reported, and those come apart in
-			ways the analogy has been hiding.
+			The count table you have been reading all the way through records what the counting process
+			reported, which comes apart from what the pizzeria actually sold in ways the analogy has been
+			hiding.
 		</p>
 
 		<h3>Some tickets get printed twice</h3>
