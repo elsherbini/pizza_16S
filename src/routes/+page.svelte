@@ -9,25 +9,20 @@
 	import ActNmds from '$lib/acts/ActNmds.svelte';
 	import ActReading from '$lib/acts/ActReading.svelte';
 	import ActCoda from '$lib/acts/ActCoda.svelte';
+	import { story } from '$lib/content/index';
 </script>
 
 <svelte:head>
-	<title>Pizza, alpha and beta</title>
-	<meta
-		name="description"
-		content="Alpha diversity, beta diversity, and ordination in microbial ecology, explained with pizzerias."
-	/>
+	<title>{story.hero.title}</title>
+	<meta name="description" content={story.description} />
 </svelte:head>
 
 <main>
 	<section class="hero">
 		<div class="inner">
-			<h1>Pizza, alpha and beta</h1>
-			<p class="deck">
-				Every diversity metric in microbial ecology is a way of comparing restaurants you are not
-				allowed to walk into. You get one night of receipts and nothing else.
-			</p>
-			<p class="byline ui">A scrolling explainer. Scroll to begin.</p>
+			<h1>{story.hero.title}</h1>
+			<p class="deck">{story.hero.deck}</p>
+			<p class="byline ui">{story.hero.byline}</p>
 		</div>
 	</section>
 

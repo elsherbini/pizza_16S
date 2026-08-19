@@ -1,19 +1,19 @@
 <script lang="ts">
+	import type { Act } from '$lib/content/index';
+
 	interface Props {
-		act: string;
-		title: string;
-		standfirst?: string;
+		act: Act;
 	}
 
-	let { act, title, standfirst }: Props = $props();
+	let { act }: Props = $props();
 </script>
 
 <header class="act-header">
 	<div class="inner">
-		<p class="act-number ui">{act}</p>
-		<h2>{title}</h2>
-		{#if standfirst}
-			<p class="standfirst">{standfirst}</p>
+		<p class="act-number ui">{act.label}</p>
+		<h2>{act.title}</h2>
+		{#if act.standfirst}
+			<p class="standfirst">{act.standfirst}</p>
 		{/if}
 	</div>
 </header>
