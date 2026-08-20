@@ -2,13 +2,12 @@
  * Every figure quoted in the running prose, checked against the value the code
  * actually computes. Prose drifts; this stops it drifting silently.
  *
- * Each case names the exact sentence fragment that appears in
- * `src/content/story.md`, so a reworded sentence fails loudly rather than
- * leaving a stale number behind.
+ * Each case names the exact sentence fragment that appears on the page, so a
+ * reworded sentence fails loudly rather than leaving a stale number behind.
  */
 
+import { readFileSync } from 'node:fs';
 import { describe, expect, test } from 'vitest';
-import { quotes } from '../content/quoted';
 import {
 	goodsCoverage,
 	hill,
@@ -28,9 +27,8 @@ const forno = countVector(hero('forno'));
 const uptown = countVector(hero('vinnies_uptown'));
 
 interface Quote {
-	/** The act the sentence belongs to, used only to name the test. */
-	where: string;
-	/** The fragment as it appears in the markdown. */
+	file: string;
+	/** The fragment as it appears in the component. */
 	fragment: string;
 	/** The number inside that fragment. */
 	quoted: string;
@@ -40,133 +38,133 @@ interface Quote {
 
 const QUOTES: Quote[] = [
 	{
-		where: 'snapshot',
+		file: 'ActSnapshot.svelte',
 		fragment: 'the register prints 240 tickets',
 		quoted: '240',
 		compute: () => ticketsSold(hero('vinnies')),
 		decimals: 0
 	},
 	{
-		where: 'richness',
+		file: 'ActRichness.svelte',
 		fragment: 'a hundred and ninety times',
 		quoted: '190',
 		compute: () => hero('vinnies').counts.plain_cheese,
 		decimals: 0
 	},
 	{
-		where: 'richness',
+		file: 'ActRichness.svelte',
 		fragment: "Sono's spreads its 180 tickets",
 		quoted: '180',
 		compute: () => ticketsSold(hero('sono')),
 		decimals: 0
 	},
 	{
-		where: 'evenness',
+		file: 'ActEvenness.svelte',
 		fragment: 'ln 12, about 2.48',
 		quoted: '2.48',
 		compute: () => Math.log(12),
 		decimals: 2
 	},
 	{
-		where: 'evenness',
+		file: 'ActEvenness.svelte',
 		fragment: "Sono's scores 2.45",
 		quoted: '2.45',
 		compute: () => shannon(sono),
 		decimals: 2
 	},
 	{
-		where: 'evenness',
+		file: 'ActEvenness.svelte',
 		fragment: "Vinnie's scores 0.91",
 		quoted: '0.91',
 		compute: () => shannon(vinnies),
 		decimals: 2
 	},
 	{
-		where: 'evenness',
+		file: 'ActEvenness.svelte',
 		fragment: "At Vinnie's, 0.64",
 		quoted: '0.64',
 		compute: () => simpson(vinnies),
 		decimals: 2
 	},
 	{
-		where: 'evenness',
+		file: 'ActEvenness.svelte',
 		fragment: "At Sono's, 0.09",
 		quoted: '0.09',
 		compute: () => simpson(sono),
 		decimals: 2
 	},
 	{
-		where: 'evenness',
+		file: 'ActEvenness.svelte',
 		fragment: "Gino's five types score 1.00",
 		quoted: '1.00',
 		compute: () => pielou(ginos),
 		decimals: 2
 	},
 	{
-		where: 'evenness',
-		fragment: "Vinnie's twelve score 0.36",
+		file: 'ActEvenness.svelte',
+		fragment: "Vinnie's twelve\n\t\t\tscore 0.36",
 		quoted: '0.36',
 		compute: () => pielou(vinnies),
 		decimals: 2
 	},
 	{
-		where: 'evenness',
+		file: 'ActEvenness.svelte',
 		fragment: 'about 2.5 by q = 1',
 		quoted: '2.5',
 		compute: () => hill(vinnies, 1),
 		decimals: 1
 	},
 	{
-		where: 'evenness',
+		file: 'ActEvenness.svelte',
 		fragment: 'and 1.6 by q = 2',
 		quoted: '1.6',
 		compute: () => hill(vinnies, 2),
 		decimals: 1
 	},
 	{
-		where: 'rarefaction',
+		file: 'ActRarefaction.svelte',
 		fragment: "Vinnie's drops to 5.3",
 		quoted: '5.3',
 		compute: () => rarefiedTo(vinnies, 34),
 		decimals: 1
 	},
 	{
-		where: 'rarefaction',
+		file: 'ActRarefaction.svelte',
 		fragment: 'coverage at 73.5%',
 		quoted: '73.5',
 		compute: () => goodsCoverage(forno) * 100,
 		decimals: 1
 	},
 	{
-		where: 'rarefaction',
+		file: 'ActRarefaction.svelte',
 		fragment: 'at 98.3%',
 		quoted: '98.3',
 		compute: () => goodsCoverage(vinnies) * 100,
 		decimals: 1
 	},
 	{
-		where: 'beta',
+		file: 'ActBeta.svelte',
 		fragment: 'They total 21%',
 		quoted: '21',
 		compute: () => overlapShare(vinnies, uptown) * 100,
 		decimals: 0
 	},
 	{
-		where: 'beta',
+		file: 'ActBeta.svelte',
 		fragment: 'one minus that: 0.79',
 		quoted: '0.79',
 		compute: () => brayCurtis(relativeAbundance(vinnies), relativeAbundance(uptown)),
 		decimals: 2
 	},
 	{
-		where: 'beta',
+		file: 'ActBeta.svelte',
 		fragment: 'giving Jaccard 0.56',
 		quoted: '0.56',
 		compute: () => jaccard(sono, forno),
 		decimals: 2
 	},
 	{
-		where: 'beta',
+		file: 'ActBeta.svelte',
 		fragment: 'Bray-Curtis 0.71',
 		quoted: '0.71',
 		compute: () => brayCurtis(relativeAbundance(sono), relativeAbundance(forno)),
@@ -186,30 +184,32 @@ function overlapShare(a: number[], b: number[]): number {
 	return ra.reduce((sum, value, i) => sum + Math.min(value, rb[i]), 0);
 }
 
+const source = (file: string) => readFileSync(new URL(file, import.meta.url), 'utf8');
+
 describe('figures quoted in the prose', () => {
-	test.each(QUOTES)('$where: "$fragment"', ({ fragment, quoted, compute, decimals }) => {
-		quotes(fragment);
+	test.each(QUOTES)('$file: "$fragment"', ({ file, fragment, quoted, compute, decimals }) => {
+		expect(source(file)).toContain(fragment);
 		expect(compute().toFixed(decimals)).toBe(quoted);
 	});
 });
 
 describe('claims the prose makes without printing a number', () => {
 	test("Vinnie's and Sono's tie on richness", () => {
-		quotes('Twelve, twelve, and five');
+		expect(source('ActRichness.svelte')).toContain('Twelve, twelve, and five');
 		expect(observedRichness(vinnies)).toBe(12);
 		expect(observedRichness(sono)).toBe(12);
 		expect(observedRichness(ginos)).toBe(5);
 	});
 
 	test("four out of five tickets at Vinnie's are the same pizza", () => {
-		quotes('Four out of five tickets');
+		expect(source('ActRichness.svelte')).toContain('Four out of five tickets');
 		const share = hero('vinnies').counts.plain_cheese / ticketsSold(hero('vinnies'));
 		expect(share).toBeGreaterThan(0.78);
 		expect(share).toBeLessThan(0.82);
 	});
 
 	test("Sono's Shannon sits close to its ceiling", () => {
-		quotes('close to that ceiling');
+		expect(source('ActEvenness.svelte')).toContain('close to that ceiling');
 		expect(Math.log(12) - shannon(sono)).toBeLessThan(0.05);
 	});
 

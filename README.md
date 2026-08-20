@@ -17,7 +17,7 @@ legible rather than to avoid it.
 npm install
 npm run dev          # http://localhost:5173
 npm run build        # static site in build/
-npm test             # 220 tests
+npm test             # 188 tests
 npm run check        # svelte-check
 ```
 
@@ -48,42 +48,15 @@ beginning with an underscore, and SvelteKit puts everything in `_app`.
 ## Layout
 
 ```
-src/content/story.md  every sentence on the page, as one markdown document
-src/lib/content/      the parser that compiles it, and the lookup the acts use
-vite/story.ts         the plugin that runs the parser at build time
 src/lib/data/         the taxonomy, the five hand-built shops, the generated field
 src/lib/diversity/    every metric, implemented and tested here
 src/lib/charts/       one component per visualisation
-src/lib/acts/         one component per act: which chart, and in which state
+src/lib/acts/         one component per act, prose included
 src/lib/scroll/       the sticky-graphic scroller
 scripts/              field generator, Python reference values, screenshot harness
-docs/plans/           the design documents
+docs/plans/           the design document
 docs/style/           the prose rules this piece is written against
 ```
-
-## Editing the prose
-
-All of it lives in `src/content/story.md`, in reading order. Three rules govern the file.
-
-`# Title` opens the hero: the blockquote under it is the deck, the paragraph after that is
-the byline. `## Act 1 — Counting the menu {#richness}` opens an act, splitting on the em
-dash into the label and the title, with the anchor naming the act for the component that
-renders it and the blockquote under it supplying the standfirst. A `---` on its own line
-splits an act's body into blocks, and each block is one scroll step, so adding a `---` adds
-a step to the page.
-
-Everything else is ordinary markdown, including the `###` subheadings and the glossary
-table in the final act. A fenced block tagged `formula` becomes a centred display line, and
-its contents pass through as raw HTML so `<sub>`, `<sup>` and entities keep working:
-
-````markdown
-```formula
-C = 1 - F<sub>1</sub> / N
-```
-````
-
-Saving the file reloads the page in `dev`. A missing or duplicated act anchor fails the
-build rather than silently dropping an act.
 
 ## The dataset
 
@@ -127,9 +100,8 @@ Logarithms are natural throughout, matching `vegan::diversity`. Note that scikit
 the sum of squared proportions `dominance` and reserves `simpson` for 1 minus that; this
 project uses the textbook naming and the fixture test crosses them deliberately.
 
-Two further test files pair every figure quoted in `story.md` with the value the code
-computes, so a reworded sentence fails rather than leaving a stale number on the page. They
-flatten whitespace before matching, so rewrapping a paragraph is free.
+Two further test files pair every figure quoted in the running prose with the value the code
+computes, so a reworded sentence fails rather than leaving a stale number on the page.
 
 ## Scope
 

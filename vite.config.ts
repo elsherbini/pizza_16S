@@ -2,7 +2,6 @@ import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
-import { storyMarkdown } from './vite/story.ts';
 
 /**
  * GitHub Pages serves a project site from a subdirectory, so the build needs to
@@ -14,7 +13,6 @@ const base: '' | `/${string}` = envBase.startsWith('/') ? (envBase as `/${string
 
 export default defineConfig({
 	plugins: [
-		storyMarkdown(),
 		tailwindcss(),
 		sveltekit({
 			compilerOptions: {
