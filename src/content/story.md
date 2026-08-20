@@ -4,8 +4,8 @@ description: Alpha diversity, beta diversity, and ordination in microbial ecolog
 
 # Pizza, alpha and beta
 
-> Every diversity metric in microbial ecology is a way of comparing restaurants you are not
-> allowed to walk into. You get one night of receipts and nothing else.
+> How would you compare different pizzerias if you had access to their orders on a given night?
+> Are they selling a lot of different pizzas, or mostly just one or two? Are different pizzerias selling the same types of pizzas?
 
 A scrolling explainer. Scroll to begin.
 
@@ -14,8 +14,7 @@ A scrolling explainer. Scroll to begin.
 > Where a count table comes from, and what it leaves out.
 
 It is seven o'clock on a Friday at Vinnie's Slice Shop in Bay Ridge, and over the next four
-hours the register prints 240 tickets. Each ticket is one order: one pizza, one customer,
-one moment.
+hours the register prints 240 tickets. Each ticket is a datapoint telling you what pizzas are getting ordered.
 
 In microbial ecology this pile of paper is a **sample**, and the pizzeria it came from is
 the community you are trying to describe.
@@ -23,26 +22,18 @@ the community you are trying to describe.
 ---
 
 Read what is printed on each ticket and you learn which pizza it was: Margherita, plain
-cheese, grandma slice.
-
-The name is all you get. It says nothing about whether the mozzarella was buffalo or cow,
-or where the tomatoes were grown. A 16S read works the same way, handing you a label from a
-reference database and stopping there. The kitchen inventory, every ingredient in what
-quantity, is shotgun metagenomics, and it costs considerably more.
+cheese, grandma slice. Note this is a pretty low-resolution look at the pizza, one shop's pepperoni might be really different from another, with different ingredients, etc. Access to these tickets is more like 16S rRNA amplicon data compared to shotgun metagenomics where you'd actually get all the ingredients used in each pizza and any modifications customers made, etc.
 
 ---
 
-Sort the tickets into a column for each pizza type. Nothing has been added and nothing
-thrown away; the same 240 tickets are standing in different piles.
+Sort the tickets into a column for each pizza type. These are the same 240 tickets, standing in different piles.
 
 ---
 
 Count each column and you have the row that every method here consumes: a **count vector**,
 one number per pizza type, summing to the number of tickets you read.
 
-Stack a few of those rows and you have a count table, samples down the side and types
-across the top. It is `otu_table` in phyloseq, a `FeatureTable[Frequency]` in QIIME 2, the
-object DADA2 hands you at the end of a run.
+Stack a few of those rows and you have a **count table**. Each column is a different pizza and each row is a pizzeria. The ticket counts of each pizza type are in the cells of the table. If a pizzeria didn't have a particular pizza, or it didn't sell any the night you got the orders, you end up with a 0 in that cell.
 
 One caution before going further. You are looking at orders, not at the menu. Vinnie's may
 stock a pizza nobody happened to order tonight, and in this table that pizza is
@@ -69,9 +60,8 @@ the first Hill number, q = 0, which will matter shortly.
 
 ---
 
-By that measure Vinnie's and Sono's are the same community, and Gino's is less than half as
-diverse as either. Is that a fair description of these three shops? Size each square by the
-share of tickets it actually accounted for and see.
+By that measure Vinnie's and Sono's are the same diversity, and Gino's is less than half as
+diverse as either. Is that a fair description of these three shops?
 
 Four out of five tickets at Vinnie's say the same thing: plain cheese. The other eleven
 types divide what is left. Sono's spreads its 180 tickets across all twelve of its.
