@@ -56,10 +56,27 @@
 	const pcoaResult = $derived(pcoa(distances));
 	const nmdsResult = $derived(nmds(distances, { dimensions: 2 }));
 
+	/**
+	 * Every configuration this component can draw is oriented against one fixed
+	 * picture: PCoA on Bray-Curtis, the first ordination the piece shows and the
+	 * one Act 6 is built on.
+	 *
+	 * A reflection changes nothing an ordination asserts, so without an anchor
+	 * the four method/metric combinations each pick their own sign and flipping
+	 * a control mirrors the plot. That reads as an enormous result and is not
+	 * one. With the anchor, the only movement left when the controls change is
+	 * movement the fit actually made -- which is the claim Act 8 opens with.
+	 */
+	const anchor = rotateToPrincipalAxes(
+		pcoa(distanceMatrix(counts.map(relativeAbundance), brayCurtis)).coordinates,
+		2
+	);
+
 	const coordinates = $derived(
 		rotateToPrincipalAxes(
 			method === 'pcoa' ? pcoaResult.coordinates : nmdsResult.coordinates,
-			2
+			2,
+			anchor
 		)
 	);
 

@@ -167,8 +167,22 @@ export function configurationDistances(coordinates: number[][], dimensions: numb
  * or spun for no reason the reader could infer. `vegan::metaMDS` rotates its
  * result the same way. Nothing about the fit changes; only which way up it is
  * drawn.
+ *
+ * Given a `reference` configuration over the same samples in the same order,
+ * each axis takes whichever sign agrees with it rather than the self-contained
+ * rule below. That matters when two ordinations swap places in one frame: PCoA
+ * and NMDS of the same distances land on nearly the same cloud, but a rule that
+ * reads only its own coordinates can hand the two of them opposite signs, and
+ * the reader sees a mirror image where the fit barely moved. Aligning to a
+ * reference costs nothing -- a reflection is free in every distance the picture
+ * claims to show -- and leaves a genuine rearrangement, which is what swapping
+ * the distance metric produces, still plainly visible.
  */
-export function rotateToPrincipalAxes(coordinates: number[][], dimensions = 2): number[][] {
+export function rotateToPrincipalAxes(
+	coordinates: number[][],
+	dimensions = 2,
+	reference?: number[][]
+): number[][] {
 	const n = coordinates.length;
 	if (n === 0) return [];
 
@@ -200,14 +214,30 @@ export function rotateToPrincipalAxes(coordinates: number[][], dimensions = 2): 
 		})
 	);
 
-	// Sign convention: the point furthest along each axis sits on the positive
-	// side, so the same data always draws the same way round.
 	for (let k = 0; k < dimensions; k++) {
-		let extreme = 0;
-		for (const row of rotated) {
-			if (Math.abs(row[k]) > Math.abs(extreme)) extreme = row[k];
+		// Against a reference: the sign that puts more of the cloud's spread on
+		// the same side of the axis as the reference put it. A dot product of
+		// exactly zero means the two configurations say nothing about each
+		// other's orientation, so the self-contained rule decides instead.
+		let agreement = 0;
+		if (reference) {
+			for (let i = 0; i < rotated.length; i++) agreement += rotated[i][k] * (reference[i]?.[k] ?? 0);
 		}
-		if (extreme < 0) {
+
+		let flip: boolean;
+		if (agreement !== 0) {
+			flip = agreement < 0;
+		} else {
+			// Self-contained: the point furthest along each axis sits on the
+			// positive side, so the same data always draws the same way round.
+			let extreme = 0;
+			for (const row of rotated) {
+				if (Math.abs(row[k]) > Math.abs(extreme)) extreme = row[k];
+			}
+			flip = extreme < 0;
+		}
+
+		if (flip) {
 			for (const row of rotated) row[k] = -row[k];
 		}
 	}

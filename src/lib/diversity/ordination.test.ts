@@ -267,6 +267,54 @@ describe('rotateToPrincipalAxes', () => {
 	test('is deterministic', () => {
 		expect(rotateToPrincipalAxes(tilted, 2)).toEqual(rotateToPrincipalAxes(tilted, 2));
 	});
+
+	test('takes the sign that agrees with a reference configuration', () => {
+		const anchor = rotateToPrincipalAxes(tilted, 2);
+		const mirrored = anchor.map((row) => [-row[0], row[1]]);
+		const aligned = rotateToPrincipalAxes(mirrored, 2, anchor);
+		for (let i = 0; i < anchor.length; i++) {
+			for (let axis = 0; axis < 2; axis++) {
+				expect(aligned[i][axis]).toBeCloseTo(anchor[i][axis], 10);
+			}
+		}
+	});
+
+	test('a reference never moves anything but the sign', () => {
+		const anchor = rotateToPrincipalAxes(tilted, 2);
+		const aligned = rotateToPrincipalAxes(tilted, 2, anchor.map((row) => [-row[0], -row[1]]));
+		const before = configurationDistances(tilted, 2);
+		const after = configurationDistances(aligned, 2);
+		for (let i = 0; i < tilted.length; i++) {
+			for (let j = 0; j < tilted.length; j++) {
+				expect(after[i][j]).toBeCloseTo(before[i][j], 10);
+			}
+		}
+		// That reference is the mirror of the self-contained answer, so it wins
+		// and every axis comes back negated rather than left alone.
+		for (let axis = 0; axis < 2; axis++) {
+			expect(aligned[0][axis]).toBeCloseTo(-anchor[0][axis], 10);
+		}
+	});
+
+	test('falls back to its own rule when the reference is orthogonal', () => {
+		const anchor = rotateToPrincipalAxes(tilted, 2);
+		const orthogonal = anchor.map(() => [0, 0]);
+		expect(rotateToPrincipalAxes(tilted, 2, orthogonal)).toEqual(anchor);
+	});
+
+	test('PCoA and NMDS of one distance matrix draw the same way round', () => {
+		const anchor = rotateToPrincipalAxes(pcoa(PLANE_DISTANCES).coordinates, 2);
+		const fitted = rotateToPrincipalAxes(
+			nmds(PLANE_DISTANCES, { dimensions: 2 }).coordinates,
+			2,
+			anchor
+		);
+		for (let axis = 0; axis < 2; axis++) {
+			let agreement = 0;
+			for (let i = 0; i < anchor.length; i++) agreement += anchor[i][axis] * fitted[i][axis];
+			expect(agreement).toBeGreaterThan(0);
+		}
+	});
 });
 
 describe('shepard', () => {
